@@ -1,6 +1,7 @@
 package com.jaredlam.tagsview;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ public class TagsView extends ViewGroup {
     public static final int LEFT_TO_RIGHT = 0;
     public static final int RIGHT_TO_LEFT = 1;
 
+    private int mPadding = DEFAULT_PADDING;
     private boolean mWillShift = false;
     private int mOrder = LEFT_TO_RIGHT;
 
@@ -36,6 +38,15 @@ public class TagsView extends ViewGroup {
 
     public TagsView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TagsView, defStyleAttr, 0);
+        int count = a.getIndexCount();
+        for (int i = 0; i < count; i++) {
+            int attrIndex = a.getIndex(i);
+            if (attrIndex == R.styleable.TagsView_padding) {
+                mPadding = a.getInt(attrIndex, 0);
+            }
+        }
+        a.recycle();
     }
 
     @Override
@@ -47,7 +58,7 @@ public class TagsView extends ViewGroup {
                 int index = mVisibleChildIndex.get(i);
                 View child = getChildAt(index);
                 setChildFrame(child, childLeft, 0, child.getMeasuredWidth(), child.getMeasuredHeight());
-                childLeft += DEFAULT_PADDING;
+                childLeft += mPadding;
                 childLeft += child.getMeasuredWidth();
 
                 mVisibleChildren.add(child);
@@ -58,7 +69,7 @@ public class TagsView extends ViewGroup {
                 int index = mVisibleChildIndex.get(i);
                 View child = getChildAt(index);
                 setChildFrame(child, childLeft, 0, child.getMeasuredWidth(), child.getMeasuredHeight());
-                childLeft += DEFAULT_PADDING;
+                childLeft += mPadding;
                 childLeft += child.getMeasuredWidth();
 
                 mVisibleChildren.add(child);
@@ -94,7 +105,7 @@ public class TagsView extends ViewGroup {
                 childMaxHeight = child.getMeasuredHeight();
             }
         }
-        childTotalWidth += ((childCount - 1) * DEFAULT_PADDING);
+        childTotalWidth += ((childCount - 1) * mPadding);
 
         mVisibleChildIndex.clear();
 
@@ -109,7 +120,7 @@ public class TagsView extends ViewGroup {
                         if (i == 0) {
                             currentWidth = actualWidth + child.getMeasuredWidth();
                         } else {
-                            currentWidth = actualWidth + DEFAULT_PADDING + child.getMeasuredWidth();
+                            currentWidth = actualWidth + mPadding + child.getMeasuredWidth();
                         }
 
                         if (currentWidth <= widthSize) {
@@ -121,7 +132,7 @@ public class TagsView extends ViewGroup {
                     int i = getChildCount() - 1;
                     while (i >= 0 && childTotalWidth > widthSize) {
                         View child = getChildAt(i);
-                        childTotalWidth -= DEFAULT_PADDING;
+                        childTotalWidth -= mPadding;
                         childTotalWidth -= child.getMeasuredWidth();
                         i--;
                     }
@@ -169,5 +180,13 @@ public class TagsView extends ViewGroup {
 
     public void setWillShift(boolean mWillShift) {
         this.mWillShift = mWillShift;
+    }
+
+    public int getPadding() {
+        return mPadding;
+    }
+
+    public void setPadding(int mPadding) {
+        this.mPadding = mPadding;
     }
 }
