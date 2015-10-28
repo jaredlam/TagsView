@@ -57,7 +57,9 @@ public class TagsView extends ViewGroup {
             for (int i = 0; i < mVisibleChildIndex.size(); i++) {
                 int index = mVisibleChildIndex.get(i);
                 View child = getChildAt(index);
-                setChildFrame(child, childLeft, 0, child.getMeasuredWidth(), child.getMeasuredHeight());
+                int top = (getMeasuredHeight() - child.getMeasuredHeight()) / 2;
+                top = top > 0 ? top : 0;
+                setChildFrame(child, childLeft, top, child.getMeasuredWidth(), child.getMeasuredHeight());
                 childLeft += mPadding;
                 childLeft += child.getMeasuredWidth();
 
@@ -68,7 +70,9 @@ public class TagsView extends ViewGroup {
             for (int i = mVisibleChildIndex.size() - 1; i >= 0; i--) {
                 int index = mVisibleChildIndex.get(i);
                 View child = getChildAt(index);
-                setChildFrame(child, childLeft, 0, child.getMeasuredWidth(), child.getMeasuredHeight());
+                int top = (getMeasuredHeight() - child.getMeasuredHeight()) / 2;
+                top = top > 0 ? top : 0;
+                setChildFrame(child, childLeft, top, child.getMeasuredWidth(), child.getMeasuredHeight());
                 childLeft += mPadding;
                 childLeft += child.getMeasuredWidth();
 
