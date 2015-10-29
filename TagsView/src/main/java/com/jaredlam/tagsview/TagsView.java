@@ -193,4 +193,18 @@ public class TagsView extends ViewGroup {
     public void setPadding(int mPadding) {
         this.mPadding = mPadding;
     }
+
+    @Override
+    public void removeAllViews() {
+        super.removeAllViews();
+        mVisibleChildren.clear();
+        mVisibleChildIndex.clear();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mVisibleChildren.clear();
+        mVisibleChildIndex.clear();
+    }
 }
