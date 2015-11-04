@@ -127,9 +127,11 @@ public class TagsView extends ViewGroup {
                             currentWidth = actualWidth + mPadding + child.getMeasuredWidth();
                         }
 
+                        actualWidth = currentWidth;
                         if (currentWidth <= widthSize) {
-                            actualWidth = currentWidth;
                             mVisibleChildIndex.add(i);
+                        } else {
+                            child.setVisibility(View.GONE);
                         }
                     }
                 } else {
@@ -165,8 +167,12 @@ public class TagsView extends ViewGroup {
     }
 
     private void fillVisibleChild(int count) {
-        for (int i = 0; i < count; i++) {
-            mVisibleChildIndex.add(i);
+        for (int i = 0; i < getChildCount(); i++) {
+            if (i < count) {
+                mVisibleChildIndex.add(i);
+            } else {
+                getChildAt(i).setVisibility(View.GONE);
+            }
         }
     }
 
@@ -204,7 +210,6 @@ public class TagsView extends ViewGroup {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        mVisibleChildren.clear();
-        mVisibleChildIndex.clear();
+        removeAllViews();
     }
 }
