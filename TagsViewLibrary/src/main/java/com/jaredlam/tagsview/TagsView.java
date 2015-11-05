@@ -20,7 +20,7 @@ public class TagsView extends ViewGroup {
     public static final int RIGHT_TO_LEFT = 1;
 
     private int mPadding = DEFAULT_PADDING;
-    private boolean mWillShift = false;
+    private boolean mWillShiftFillGap = false;
     private int mOrder = LEFT_TO_RIGHT;
 
     private List<Integer> mVisibleChildIndex = new ArrayList<>();
@@ -53,7 +53,7 @@ public class TagsView extends ViewGroup {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         mVisibleChildren.clear();
         if (mOrder == LEFT_TO_RIGHT) {
-            int childLeft = 0;
+            int childLeft = getPaddingLeft();
             for (int i = 0; i < mVisibleChildIndex.size(); i++) {
                 int index = mVisibleChildIndex.get(i);
                 View child = getChildAt(index);
@@ -66,7 +66,7 @@ public class TagsView extends ViewGroup {
                 mVisibleChildren.add(child);
             }
         } else if (mOrder == RIGHT_TO_LEFT) {
-            int childLeft = 0;
+            int childLeft = getPaddingLeft();
             for (int i = mVisibleChildIndex.size() - 1; i >= 0; i--) {
                 int index = mVisibleChildIndex.get(i);
                 View child = getChildAt(index);
@@ -115,7 +115,7 @@ public class TagsView extends ViewGroup {
 
         switch (widthMode) {
             case MeasureSpec.EXACTLY:
-                if (mWillShift) {
+                if (mWillShiftFillGap) {
                     int actualWidth = 0;
                     for (int i = 0; i < getChildCount(); i++) {
                         View child = getChildAt(i);
@@ -127,8 +127,8 @@ public class TagsView extends ViewGroup {
                             currentWidth = actualWidth + mPadding + child.getMeasuredWidth();
                         }
 
-                        actualWidth = currentWidth;
                         if (currentWidth <= widthSize) {
+                            actualWidth = currentWidth;
                             mVisibleChildIndex.add(i);
                         } else {
                             child.setVisibility(View.GONE);
@@ -163,7 +163,7 @@ public class TagsView extends ViewGroup {
                 break;
         }
 
-        setMeasuredDimension(widthSize, heightSize);
+        setMeasuredDimension(widthSize + getPaddingLeft() + getPaddingRight(), heightSize + getPaddingTop() + getPaddingBottom());
     }
 
     private void fillVisibleChild(int count) {
@@ -188,8 +188,8 @@ public class TagsView extends ViewGroup {
         void onLayoutFinished(List<View> visibleChildren);
     }
 
-    public void setWillShift(boolean mWillShift) {
-        this.mWillShift = mWillShift;
+    public void setWillShiftAndFillGap(boolean mWillShift) {
+        this.mWillShiftFillGap = mWillShift;
     }
 
     public int getPadding() {

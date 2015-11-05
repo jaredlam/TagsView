@@ -1,1 +1,1 @@
-include ':TagsViewDemo', ':TagsView'
+include ':TagsViewDemo', ':TagsViewLibrary'
