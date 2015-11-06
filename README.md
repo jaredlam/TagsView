@@ -13,8 +13,11 @@ TagsView is a Android Library that can contains its children without cut them of
 ![alt tag](https://raw.githubusercontent.com/jaredlam/TagsView/master/TagsViewDemo/image/screenshot.png)
 
 # Download
-I will uploading to jcenter ASAP.
-
+```groove
+dependencies {
+    compile 'com.jaredlam.tagsview:TagsViewLibrary:0.1.0'
+}
+```
 # Usage
 
 ```xml
