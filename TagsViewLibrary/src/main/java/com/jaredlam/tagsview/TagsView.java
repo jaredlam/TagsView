@@ -208,6 +208,12 @@ public class TagsView extends ViewGroup {
     }
 
     @Override
+    public void addView(View child, int index, LayoutParams params) {
+        super.addView(child, index, params);
+        child.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         removeAllViews();
