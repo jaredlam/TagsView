@@ -27,7 +27,6 @@ public class MainActivity extends Activity {
             tag.setTextColor(getResources().getColor(android.R.color.black));
             tag.setBackgroundResource(colors[i]);
             tag.setText(labels[i]);
-            tag.setPadding(10, 10, 10, 10);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             if (i != labels.length - 1) {
                 params.setMargins(0, 0, 10, 0);
@@ -42,7 +41,6 @@ public class MainActivity extends Activity {
             tag.setTextColor(getResources().getColor(android.R.color.black));
             tag.setBackgroundResource(colors[i]);
             tag.setText(labels[i]);
-            tag.setPadding(10, 10, 10, 10);
             tagsView1.addView(tag);
         }
 
@@ -53,7 +51,6 @@ public class MainActivity extends Activity {
             tag.setTextColor(getResources().getColor(android.R.color.black));
             tag.setBackgroundResource(colors[i]);
             tag.setText(labels[i]);
-            tag.setPadding(10, 10, 10, 10);
             tagsView2.addView(tag);
         }
 
@@ -64,7 +61,6 @@ public class MainActivity extends Activity {
             tag.setTextColor(getResources().getColor(android.R.color.black));
             tag.setBackgroundResource(colors[i]);
             tag.setText(labels[i]);
-            tag.setPadding(10, 10, 10, 10);
             tagsView3.addView(tag);
         }
 
@@ -76,7 +72,6 @@ public class MainActivity extends Activity {
             tag.setTextColor(getResources().getColor(android.R.color.black));
             tag.setBackgroundResource(colors[i]);
             tag.setText(labels[i]);
-            tag.setPadding(10, 10, 10, 10);
             tagsView4.addView(tag);
         }
     }

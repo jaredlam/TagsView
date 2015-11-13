@@ -51,7 +51,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray_light"
-                android:padding="10dp" />
+                android:padding="10dp"
+                app:tagsview_padding="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -66,7 +67,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray_light"
-                android:padding="10dp" />
+                android:padding="10dp"
+                app:tagsview_padding="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -81,7 +83,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray_light"
-                android:padding="10dp" />
+                android:padding="10dp"
+                app:tagsview_padding="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -96,7 +99,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray_light"
-                android:padding="10dp" />
+                android:padding="10dp"
+                app:tagsview_padding="5dp" />
 
         </LinearLayout>
 

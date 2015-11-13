@@ -29,21 +29,21 @@ public class TagsView extends ViewGroup {
     private List<View> mVisibleChildren = new ArrayList<>();
 
     public TagsView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public TagsView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public TagsView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TagsView, defStyleAttr, 0);
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.tagsview_TagsView, defStyleAttr, 0);
         int count = a.getIndexCount();
         for (int i = 0; i < count; i++) {
             int attrIndex = a.getIndex(i);
-            if (attrIndex == R.styleable.TagsView_padding) {
-                mPadding = a.getInt(attrIndex, 0);
+            if (attrIndex == R.styleable.tagsview_TagsView_tagsview_padding) {
+                mPadding = a.getDimensionPixelSize(attrIndex, 0);
             }
         }
         a.recycle();
