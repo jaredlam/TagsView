@@ -2,6 +2,7 @@ package com.jaredlam.tagsview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +15,14 @@ import java.util.List;
  */
 public class TagsView extends ViewGroup {
 
-    private static final int DEFAULT_PADDING = 10;
+    private static final int DEFAULT_HORIZONTAL_PADDING = 10;
+    private static final int DEFAULT_VERTICAL_PADDING = 10;
 
-    public static final int LEFT_TO_RIGHT = 0;
-    public static final int RIGHT_TO_LEFT = 1;
-
-    private int mPadding = DEFAULT_PADDING;
+    private int mHorizontalPadding = DEFAULT_HORIZONTAL_PADDING;
+    private int mVerticalPadding = DEFAULT_VERTICAL_PADDING;
     private boolean mWillShiftFillGap = false;
-    private int mOrder = LEFT_TO_RIGHT;
 
+    private int mCurrentRowHeight = 0;
     private List<Integer> mVisibleChildIndex = new ArrayList<>();
 
     private LayoutListener mLayoutListener;
@@ -42,8 +42,10 @@ public class TagsView extends ViewGroup {
         int count = a.getIndexCount();
         for (int i = 0; i < count; i++) {
             int attrIndex = a.getIndex(i);
-            if (attrIndex == R.styleable.tagsview_TagsView_tagsview_padding) {
-                mPadding = a.getDimensionPixelSize(attrIndex, 0);
+            if (attrIndex == R.styleable.tagsview_TagsView_tagsview_horizontal_padding) {
+                mHorizontalPadding = a.getDimensionPixelSize(attrIndex, DEFAULT_HORIZONTAL_PADDING);
+            } else if (attrIndex == R.styleable.tagsview_TagsView_tagsview_vertical_padding) {
+                mVerticalPadding = a.getDimensionPixelOffset(attrIndex, DEFAULT_VERTICAL_PADDING);
             }
         }
         a.recycle();
@@ -52,38 +54,43 @@ public class TagsView extends ViewGroup {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         mVisibleChildren.clear();
-        if (mOrder == LEFT_TO_RIGHT) {
-            int childLeft = getPaddingLeft();
-            for (int i = 0; i < mVisibleChildIndex.size(); i++) {
-                int index = mVisibleChildIndex.get(i);
-                View child = getChildAt(index);
-                int top = (getMeasuredHeight() - child.getMeasuredHeight()) / 2;
-                top = top > 0 ? top : 0;
-                setChildFrame(child, childLeft, top, child.getMeasuredWidth(), child.getMeasuredHeight());
-                childLeft += mPadding;
-                childLeft += child.getMeasuredWidth();
+        int left = getPaddingLeft();
+        int top = getPaddingTop();
+        top = top > 0 ? top : 0;
 
-                mVisibleChildren.add(child);
-            }
-        } else if (mOrder == RIGHT_TO_LEFT) {
-            int childLeft = getPaddingLeft();
-            for (int i = mVisibleChildIndex.size() - 1; i >= 0; i--) {
-                int index = mVisibleChildIndex.get(i);
-                View child = getChildAt(index);
-                int top = (getMeasuredHeight() - child.getMeasuredHeight()) / 2;
-                top = top > 0 ? top : 0;
-                setChildFrame(child, childLeft, top, child.getMeasuredWidth(), child.getMeasuredHeight());
-                childLeft += mPadding;
-                childLeft += child.getMeasuredWidth();
-
-                mVisibleChildren.add(child);
-            }
+        for (int i = 0; i < mVisibleChildIndex.size(); i++) {
+            Point leftTop = layoutChild(i, left, top);
+            left = leftTop.x;
+            top = leftTop.y;
         }
 
         if (mLayoutListener != null) {
             mLayoutListener.onLayoutFinished(mVisibleChildren);
         }
     }
+
+    private Point layoutChild(int i, int left, int top) {
+        int index = mVisibleChildIndex.get(i);
+        View child = getChildAt(index);
+
+        if (left + child.getMeasuredWidth() + getPaddingRight() <= getMeasuredWidth()) {
+            mCurrentRowHeight = child.getMeasuredHeight() > mCurrentRowHeight ? child.getMeasuredHeight() : mCurrentRowHeight;
+            setChildFrame(child, left, top, child.getMeasuredWidth(), child.getMeasuredHeight());
+        } else {
+            top += mCurrentRowHeight;
+            top += mVerticalPadding;
+            left = getPaddingLeft();
+            setChildFrame(child, left, top, child.getMeasuredWidth(), child.getMeasuredHeight());
+            mCurrentRowHeight = child.getMeasuredHeight();
+        }
+
+        left = left + child.getMeasuredWidth() + mHorizontalPadding;
+
+        mVisibleChildren.add(child);
+
+        return new Point(left, top);
+    }
+
 
     private void setChildFrame(View child, int left, int top, int width, int height) {
         child.layout(left, top, left + width, top + height);
@@ -109,43 +116,41 @@ public class TagsView extends ViewGroup {
                 childMaxHeight = child.getMeasuredHeight();
             }
         }
-        childTotalWidth += ((childCount - 1) * mPadding);
+        childTotalWidth += ((childCount - 1) * mHorizontalPadding);
 
         mVisibleChildIndex.clear();
 
         switch (widthMode) {
             case MeasureSpec.EXACTLY:
                 if (mWillShiftFillGap) {
-                    int actualWidth = 0;
+                    int left = getPaddingLeft();
                     for (int i = 0; i < getChildCount(); i++) {
-                        View child = getChildAt(i);
+                        if (!hasAddedToVisible(i)) {
+                            View child = getChildAt(i);
+                            int right = left + child.getMeasuredWidth();
+                            if (right + getPaddingRight() <= widthSize) {
+                                left += (child.getMeasuredWidth() + mHorizontalPadding);
+                            } else {
+                                for (int j = i + 1; j < getChildCount(); j++) {
+                                    if (!hasAddedToVisible(j)) {
+                                        View fillChild = getChildAt(j);
+                                        right = left + fillChild.getMeasuredWidth();
+                                        if (right + getPaddingRight() <= widthSize) {
+                                            left += (fillChild.getMeasuredWidth() + mHorizontalPadding);
+                                            mVisibleChildIndex.add(j);
+                                        }
+                                    }
+                                }
+                                left = getPaddingLeft();
+                                left += (child.getMeasuredWidth() + mHorizontalPadding);
+                            }
 
-                        int currentWidth;
-                        if (i == 0) {
-                            currentWidth = actualWidth + child.getMeasuredWidth();
-                        } else {
-                            currentWidth = actualWidth + mPadding + child.getMeasuredWidth();
-                        }
-
-                        if (currentWidth <= widthSize) {
-                            actualWidth = currentWidth;
                             mVisibleChildIndex.add(i);
-                        } else {
-                            child.setVisibility(View.GONE);
                         }
                     }
                 } else {
-                    int i = getChildCount() - 1;
-                    while (i >= 0 && childTotalWidth > widthSize) {
-                        View child = getChildAt(i);
-                        childTotalWidth -= mPadding;
-                        childTotalWidth -= child.getMeasuredWidth();
-                        i--;
-                    }
-                    int count = i + 1;
-                    fillVisibleChild(count);
+                    fillVisibleChild(getChildCount());
                 }
-
                 break;
             case MeasureSpec.AT_MOST:
                 int count = getChildCount();
@@ -159,11 +164,41 @@ public class TagsView extends ViewGroup {
                 break;
             case MeasureSpec.AT_MOST:
             case MeasureSpec.UNSPECIFIED:
-                heightSize = childMaxHeight;
+                heightSize = getPaddingTop();
+                int i = 0;
+                int rowMaxHeight = 0;
+                int left = getPaddingLeft();
+                while (i < mVisibleChildIndex.size()) {
+                    View child = getChildAt(mVisibleChildIndex.get(i));
+                    int right = left + child.getMeasuredWidth();
+                    if (right + getPaddingRight() <= widthSize) {
+                        rowMaxHeight = rowMaxHeight < child.getMeasuredHeight() ? child.getMeasuredHeight() : rowMaxHeight;
+                    } else {
+                        heightSize += rowMaxHeight;
+                        heightSize += mVerticalPadding;
+                        left = getPaddingLeft();
+                        rowMaxHeight = child.getMeasuredHeight();
+                    }
+
+                    left += (child.getMeasuredWidth() + mHorizontalPadding);
+                    i++;
+                }
+                heightSize += rowMaxHeight;
+                heightSize += getPaddingBottom();
                 break;
         }
 
-        setMeasuredDimension(widthSize + getPaddingLeft() + getPaddingRight(), heightSize + getPaddingTop() + getPaddingBottom());
+        setMeasuredDimension(widthSize, heightSize);
+    }
+
+    private boolean hasAddedToVisible(int i) {
+        for (Integer index : mVisibleChildIndex) {
+            if (i == index) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void fillVisibleChild(int count) {
@@ -176,16 +211,13 @@ public class TagsView extends ViewGroup {
         }
     }
 
-    public void setOrder(int order) {
-        this.mOrder = order;
-    }
-
     public void setLayoutListener(LayoutListener mLayoutListener) {
         this.mLayoutListener = mLayoutListener;
     }
 
     public interface LayoutListener {
         void onLayoutFinished(List<View> visibleChildren);
+
     }
 
     public void setWillShiftAndFillGap(boolean mWillShift) {
@@ -193,11 +225,11 @@ public class TagsView extends ViewGroup {
     }
 
     public int getPadding() {
-        return mPadding;
+        return mHorizontalPadding;
     }
 
     public void setPadding(int mPadding) {
-        this.mPadding = mPadding;
+        this.mHorizontalPadding = mPadding;
     }
 
     @Override

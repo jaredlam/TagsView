@@ -13,7 +13,8 @@ import com.jaredlam.tagsview.TagsView;
  */
 public class MainActivity extends Activity {
 
-    private static String[] labels = {"Hello Bubble", "This", "Android", "Github", "Bubble with different size", "a", "Yo"};
+    private static String[] labels = {"Hello Bubble", "This", "Android", "Github",
+            "Bubble with different size", "a", "Yo", "More", "Long long long long tag again", "For test", "https://github.com/", "Great"};
     private static int[] colors = {R.color.dark_orange, R.color.yellow_green, R.color.brown, R.color.pink, R.color.red, R.color.yellow, R.color.green};
 
     @Override
@@ -25,7 +26,7 @@ public class MainActivity extends Activity {
         for (int i = 0; i < labels.length; i++) {
             TextView tag = new TextView(this);
             tag.setTextColor(getResources().getColor(android.R.color.black));
-            tag.setBackgroundResource(colors[i]);
+            tag.setBackgroundResource(colors[i % colors.length]);
             tag.setText(labels[i]);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             if (i != labels.length - 1) {
@@ -39,7 +40,7 @@ public class MainActivity extends Activity {
         for (int i = 0; i < labels.length; i++) {
             TextView tag = new TextView(this);
             tag.setTextColor(getResources().getColor(android.R.color.black));
-            tag.setBackgroundResource(colors[i]);
+            tag.setBackgroundResource(colors[i % colors.length]);
             tag.setText(labels[i]);
             tagsView1.addView(tag);
         }
@@ -49,30 +50,10 @@ public class MainActivity extends Activity {
         for (int i = 0; i < labels.length; i++) {
             TextView tag = new TextView(this);
             tag.setTextColor(getResources().getColor(android.R.color.black));
-            tag.setBackgroundResource(colors[i]);
+            tag.setBackgroundResource(colors[i % colors.length]);
             tag.setText(labels[i]);
             tagsView2.addView(tag);
         }
 
-        TagsView tagsView3 = (TagsView) findViewById(R.id.tags_view_3);
-        tagsView3.setOrder(TagsView.RIGHT_TO_LEFT);
-        for (int i = 0; i < labels.length; i++) {
-            TextView tag = new TextView(this);
-            tag.setTextColor(getResources().getColor(android.R.color.black));
-            tag.setBackgroundResource(colors[i]);
-            tag.setText(labels[i]);
-            tagsView3.addView(tag);
-        }
-
-        TagsView tagsView4 = (TagsView) findViewById(R.id.tags_view_4);
-        tagsView4.setOrder(TagsView.RIGHT_TO_LEFT);
-        tagsView4.setWillShiftAndFillGap(true);
-        for (int i = 0; i < labels.length; i++) {
-            TextView tag = new TextView(this);
-            tag.setTextColor(getResources().getColor(android.R.color.black));
-            tag.setBackgroundResource(colors[i]);
-            tag.setText(labels[i]);
-            tagsView4.addView(tag);
-        }
     }
 }

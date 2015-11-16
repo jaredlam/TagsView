@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Left to right:"
+                android:text="normal mode:"
                 android:textColor="@android:color/black" />
 
             <com.jaredlam.tagsview.TagsView
@@ -52,13 +52,14 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/gray_light"
                 android:padding="10dp"
-                app:tagsview_padding="5dp" />
+                app:tagsview_horizontal_padding="10dp"
+                app:tagsview_vertical_padding="10dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Left to right, shift and fill gap:"
+                android:text="shift and fill gap mode:"
                 android:textColor="@android:color/black" />
 
             <com.jaredlam.tagsview.TagsView
@@ -68,39 +69,8 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/gray_light"
                 android:padding="10dp"
-                app:tagsview_padding="5dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Right to left:"
-                android:textColor="@android:color/black" />
-
-            <com.jaredlam.tagsview.TagsView
-                android:id="@+id/tags_view_3"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@color/gray_light"
-                android:padding="10dp"
-                app:tagsview_padding="5dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Right to left, shift and fill gap:"
-                android:textColor="@android:color/black" />
-
-            <com.jaredlam.tagsview.TagsView
-                android:id="@+id/tags_view_4"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@color/gray_light"
-                android:padding="10dp"
-                app:tagsview_padding="5dp" />
+                app:tagsview_horizontal_padding="10dp"
+                app:tagsview_vertical_padding="10dp" />
 
         </LinearLayout>
 

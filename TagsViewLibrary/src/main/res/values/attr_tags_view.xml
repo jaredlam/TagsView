@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="tagsview_TagsView">
-        <attr name="tagsview_padding" format="dimension" />
+        <attr name="tagsview_horizontal_padding" format="dimension" />
+        <attr name="tagsview_vertical_padding" format="dimension" />
     </declare-styleable>
 </resources>
