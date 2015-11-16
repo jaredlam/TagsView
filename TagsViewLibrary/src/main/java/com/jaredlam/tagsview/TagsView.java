@@ -224,12 +224,20 @@ public class TagsView extends ViewGroup {
         this.mWillShiftFillGap = mWillShift;
     }
 
-    public int getPadding() {
+    public int getHorizontalPadding() {
         return mHorizontalPadding;
     }
 
-    public void setPadding(int mPadding) {
-        this.mHorizontalPadding = mPadding;
+    public void setHorizontalPadding(int mHorizontalPadding) {
+        this.mHorizontalPadding = mHorizontalPadding;
+    }
+
+    public int getVerticalPadding() {
+        return mVerticalPadding;
+    }
+
+    public void setVerticalPadding(int mVerticalPadding) {
+        this.mVerticalPadding = mVerticalPadding;
     }
 
     @Override
