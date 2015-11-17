@@ -8,14 +8,14 @@
 
 # Introduction
 
-TagsView is a Android Library that can contains its children without cut them off, and it also can arranges them forwardly or reversely.
+TagsView is a Android Library that can contains its children without cut them off, and support multiple lines.
 
 ![alt tag](https://raw.githubusercontent.com/jaredlam/TagsView/master/TagsViewDemo/image/screenshot.png)
 
 # Download
 ```groove
 dependencies {
-    compile 'com.jaredlam.tagsview:TagsViewLibrary:0.1.0'
+    compile 'com.jaredlam.tagsview:TagsViewLibrary:0.1.1'
 }
 ```
 # Usage
@@ -32,7 +32,6 @@ dependencies {
 
 ```java
 TagsView tagsView = (TagsView) findViewById(R.id.tags_view);
-tagsView.setOrder(TagsView.RIGHT_TO_LEFT);
 tagsView.setWillShiftAndFillGap(true);
 
 for (int i = 0; i < labels.length; i++) {
