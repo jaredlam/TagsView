@@ -10,7 +10,7 @@
 
 TagsView is a Android Library that can contains its children without cut them off, and support multiple lines.
 
-![alt tag](https://raw.githubusercontent.com/jaredlam/TagsView/master/TagsViewDemo/image/screenshot.png)
+![alt tag](https://raw.githubusercontent.com/jaredlam/TagsView/master/screenshot.png)
 
 # Download
 ```groove
