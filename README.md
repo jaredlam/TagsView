@@ -1,5 +1,7 @@
 # TagsView
 
+[ ![Download](https://api.bintray.com/packages/jaredlam/maven/TagsView/images/download.svg) ](https://bintray.com/jaredlam/maven/TagsView/_latestVersion)
+
 - [Introduction](#introduction)
 - [Download](#download)
 - [Usage](#usage)
