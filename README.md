@@ -17,7 +17,7 @@ TagsView is a Android Library that can contains its children without cut them of
 # Download
 ```groove
 dependencies {
-    compile 'com.jaredlam.tagsview:TagsViewLibrary:0.1.1'
+    compile 'com.jaredlam.tagsview:TagsViewLibrary:0.1.2'
 }
 ```
 # Usage
