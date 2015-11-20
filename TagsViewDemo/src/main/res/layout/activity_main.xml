@@ -72,6 +72,23 @@
                 app:tagsview_horizontal_padding="10dp"
                 app:tagsview_vertical_padding="10dp" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="fixed height:"
+                android:textColor="@android:color/black" />
+
+            <com.jaredlam.tagsview.TagsView
+                android:id="@+id/tags_view_3"
+                android:layout_width="300dp"
+                android:layout_height="110dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/gray_light"
+                android:padding="10dp"
+                app:tagsview_horizontal_padding="10dp"
+                app:tagsview_vertical_padding="10dp" />
+
         </LinearLayout>
 
     </ScrollView>

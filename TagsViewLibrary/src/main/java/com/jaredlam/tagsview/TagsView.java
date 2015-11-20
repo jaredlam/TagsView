@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -123,31 +124,7 @@ public class TagsView extends ViewGroup {
         switch (widthMode) {
             case MeasureSpec.EXACTLY:
                 if (mWillShiftFillGap) {
-                    int left = getPaddingLeft();
-                    for (int i = 0; i < getChildCount(); i++) {
-                        if (!hasAddedToVisible(i)) {
-                            View child = getChildAt(i);
-                            int right = left + child.getMeasuredWidth();
-                            if (right + getPaddingRight() <= widthSize) {
-                                left += (child.getMeasuredWidth() + mHorizontalPadding);
-                            } else {
-                                for (int j = i + 1; j < getChildCount(); j++) {
-                                    if (!hasAddedToVisible(j)) {
-                                        View fillChild = getChildAt(j);
-                                        right = left + fillChild.getMeasuredWidth();
-                                        if (right + getPaddingRight() <= widthSize) {
-                                            left += (fillChild.getMeasuredWidth() + mHorizontalPadding);
-                                            mVisibleChildIndex.add(j);
-                                        }
-                                    }
-                                }
-                                left = getPaddingLeft();
-                                left += (child.getMeasuredWidth() + mHorizontalPadding);
-                            }
-
-                            mVisibleChildIndex.add(i);
-                        }
-                    }
+                    shiftAndFillGap(widthSize);
                 } else {
                     fillVisibleChild(getChildCount());
                 }
@@ -161,34 +138,111 @@ public class TagsView extends ViewGroup {
 
         switch (heightMode) {
             case MeasureSpec.EXACTLY:
+                int firstNeedRemoveIndex = removeVisibleChildByHeight(widthSize, heightSize);
+                if (firstNeedRemoveIndex != -1) {
+                    mVisibleChildIndex = mVisibleChildIndex.subList(0, firstNeedRemoveIndex);
+                }
                 break;
             case MeasureSpec.AT_MOST:
             case MeasureSpec.UNSPECIFIED:
-                heightSize = getPaddingTop();
-                int i = 0;
-                int rowMaxHeight = 0;
-                int left = getPaddingLeft();
-                while (i < mVisibleChildIndex.size()) {
-                    View child = getChildAt(mVisibleChildIndex.get(i));
-                    int right = left + child.getMeasuredWidth();
-                    if (right + getPaddingRight() <= widthSize) {
-                        rowMaxHeight = rowMaxHeight < child.getMeasuredHeight() ? child.getMeasuredHeight() : rowMaxHeight;
-                    } else {
-                        heightSize += rowMaxHeight;
-                        heightSize += mVerticalPadding;
-                        left = getPaddingLeft();
-                        rowMaxHeight = child.getMeasuredHeight();
-                    }
-
-                    left += (child.getMeasuredWidth() + mHorizontalPadding);
-                    i++;
-                }
-                heightSize += rowMaxHeight;
-                heightSize += getPaddingBottom();
+                heightSize = getActualHeight(widthSize);
                 break;
         }
 
         setMeasuredDimension(widthSize, heightSize);
+    }
+
+    private void shiftAndFillGap(int widthSize) {
+        int left = getPaddingLeft();
+        for (int i = 0; i < getChildCount(); i++) {
+            if (!hasAddedToVisible(i)) {
+                View child = getChildAt(i);
+                int right = left + child.getMeasuredWidth();
+                if (right + getPaddingRight() <= widthSize) {
+                    left += (child.getMeasuredWidth() + mHorizontalPadding);
+                } else {
+                    for (int j = i + 1; j < getChildCount(); j++) {
+                        if (!hasAddedToVisible(j)) {
+                            View fillChild = getChildAt(j);
+                            right = left + fillChild.getMeasuredWidth();
+                            if (right + getPaddingRight() <= widthSize) {
+                                left += (fillChild.getMeasuredWidth() + mHorizontalPadding);
+                                mVisibleChildIndex.add(j);
+                            }
+                        }
+                    }
+                    left = getPaddingLeft();
+                    left += (child.getMeasuredWidth() + mHorizontalPadding);
+                }
+
+                mVisibleChildIndex.add(i);
+            }
+        }
+    }
+
+    private int getActualHeight(int widthSize) {
+        int heightSize = getPaddingTop();
+        int i = 0;
+        int rowMaxHeight = 0;
+        int left = getPaddingLeft();
+        while (i < mVisibleChildIndex.size()) {
+            View child = getChildAt(mVisibleChildIndex.get(i));
+            int right = left + child.getMeasuredWidth();
+            if (right + getPaddingRight() <= widthSize) {
+                rowMaxHeight = rowMaxHeight < child.getMeasuredHeight() ? child.getMeasuredHeight() : rowMaxHeight;
+            } else {
+                heightSize += rowMaxHeight;
+                heightSize += mVerticalPadding;
+                left = getPaddingLeft();
+                rowMaxHeight = child.getMeasuredHeight();
+            }
+
+            left += (child.getMeasuredWidth() + mHorizontalPadding);
+            i++;
+        }
+        heightSize += rowMaxHeight;
+        heightSize += getPaddingBottom();
+
+        return heightSize;
+    }
+
+    private int removeVisibleChildByHeight(int widthSize, int exactlyHeight) {
+        Iterator<Integer> iterator = mVisibleChildIndex.iterator();
+        int heightSize = getPaddingTop();
+        int left = getPaddingLeft();
+        int rowMaxHeight = 0;
+        int rowStartIndex = 0;
+        int firstNeedRemoveIndex = -1;
+        for (int i = 0; i < mVisibleChildIndex.size(); i++) {
+            Integer index = iterator.next();
+            View child = getChildAt(index);
+            int right = left + child.getMeasuredWidth();
+            if (right + getPaddingRight() <= widthSize) {
+                rowMaxHeight = rowMaxHeight < child.getMeasuredHeight() ? child.getMeasuredHeight() : rowMaxHeight;
+            } else {
+                heightSize += rowMaxHeight;
+                heightSize += mVerticalPadding;
+                if (heightSize <= exactlyHeight) {
+                    left = getPaddingLeft();
+                    rowMaxHeight = child.getMeasuredHeight();
+                    rowStartIndex = i;
+                } else {
+                    firstNeedRemoveIndex = rowStartIndex;
+                    break;
+                }
+            }
+
+            left += (child.getMeasuredWidth() + mHorizontalPadding);
+        }
+
+        if (firstNeedRemoveIndex == -1) {
+            heightSize += rowMaxHeight;
+            heightSize += getPaddingBottom();
+            if (heightSize > exactlyHeight) {
+                firstNeedRemoveIndex = rowStartIndex;
+            }
+        }
+        return firstNeedRemoveIndex;
     }
 
     private boolean hasAddedToVisible(int i) {

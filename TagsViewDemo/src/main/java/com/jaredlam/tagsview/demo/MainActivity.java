@@ -55,5 +55,14 @@ public class MainActivity extends Activity {
             tagsView2.addView(tag);
         }
 
+        TagsView tagsView3 = (TagsView) findViewById(R.id.tags_view_3);
+        for (int i = 0; i < labels.length; i++) {
+            TextView tag = new TextView(this);
+            tag.setTextColor(getResources().getColor(android.R.color.black));
+            tag.setBackgroundResource(colors[i % colors.length]);
+            tag.setText(labels[i]);
+            tagsView3.addView(tag);
+        }
+
     }
 }
