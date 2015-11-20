@@ -5,7 +5,6 @@
 - [Introduction](#introduction)
 - [Download](#download)
 - [Usage](#usage)
-- [To-Do List](#to-do-list)
 - [License](#license)
 
 # Introduction
@@ -45,10 +44,6 @@ for (int i = 0; i < labels.length; i++) {
     tagsView.addView(tag);
 }
 ```
-
-# To-Do List
-
-- Add support for multiple lines
 
 # License
 
